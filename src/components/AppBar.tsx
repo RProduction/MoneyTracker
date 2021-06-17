@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import Bar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -7,7 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 
 import Minimize from '@material-ui/icons/Minimize';
-import Launch from '@material-ui/icons/Launch';
+import Fullscreen from '@material-ui/icons/Fullscreen';
+import FullscreenExit from '@material-ui/icons/FullscreenExit';
 import Close from '@material-ui/icons/Close';
 
 const useStyles = makeStyles(() => createStyles({
@@ -27,6 +28,18 @@ const useStyles = makeStyles(() => createStyles({
 
 function AppBar() {
 	const styles = useStyles();
+	const [fullscreen, setFullscreen] = useState<boolean>(false);
+
+	const min = () => {
+		window.api.minimize();
+	};
+	const resize = () => {
+		setFullscreen(!fullscreen);
+		window.api.maximize();
+	};
+	const close = () => {
+		window.api.close();
+	};
 
 	return (
 		<Bar position="static" className={styles.root}>
@@ -34,13 +47,13 @@ function AppBar() {
 				<Typography variant="h6" className={styles.title}>
 					Money Tracker
 				</Typography>
-				<Button>
+				<Button onClick={min}>
 					<Minimize/>
 				</Button>
-				<Button>
-					<Launch/>
+				<Button onClick={resize}>
+					{fullscreen ? <FullscreenExit/> : <Fullscreen/>}
 				</Button>
-				<Button>
+				<Button onClick={close}>
 					<Close className={styles.red}/>
 				</Button>
 			</Toolbar>
