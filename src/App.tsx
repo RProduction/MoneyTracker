@@ -11,9 +11,21 @@ import {Route, Switch} from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import AppBar from './components/AppBar';
+import FooterNav from './components/FooterNav';
 
 const theme = createMuiTheme({
-    
+    palette: {
+			primary: {
+				main: '#ffeb3b',
+				light: '#ffff72',
+				dark: '#c8b900'
+			},
+			secondary: {
+				main: '#f9a825',
+				light: '#ffd95a',
+				dark: '#c17900'
+			}
+		}
 });
 
 function App() {
@@ -26,7 +38,7 @@ function App() {
 			<Switch>
 				
 			</Switch>
-
+			<FooterNav/>
 		</React.Fragment>
   	);
 }
