@@ -13,10 +13,11 @@ import Close from '@material-ui/icons/Close';
 
 const useStyles = makeStyles(() => createStyles({
 	root: {
-
+		
 	},
 	title: {
-		flexGrow: 1
+		flexGrow: 1,
+		textAlign: "center"
 	},
 	toolbar: {
 		paddingRight: 0
@@ -42,18 +43,18 @@ function AppBar() {
 	};
 
 	return (
-		<Bar position="static" className={styles.root}>
+		<Bar position="sticky" className={styles.root} id="appbar">
 			<Toolbar variant="dense" className={styles.toolbar}>
 				<Typography variant="h6" className={styles.title}>
 					Money Tracker
 				</Typography>
-				<Button onClick={min}>
+				<Button onClick={min} id="appbarbutton">
 					<Minimize/>
 				</Button>
-				<Button onClick={resize}>
+				<Button onClick={resize} id="appbarbutton">
 					{fullscreen ? <FullscreenExit/> : <Fullscreen/>}
 				</Button>
-				<Button onClick={close}>
+				<Button onClick={close} id="appbarbutton">
 					<Close className={styles.red}/>
 				</Button>
 			</Toolbar>

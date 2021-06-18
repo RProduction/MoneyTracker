@@ -12,6 +12,7 @@ import { RecoilRoot } from 'recoil';
 
 import AppBar from './components/AppBar';
 import FooterNav from './components/FooterNav';
+import List from './pages/List';
 
 const theme = createMuiTheme({
     palette: {
@@ -36,7 +37,7 @@ function App() {
 			
 			<AppBar/>
 			<Switch>
-				
+				<Route component={List}/>
 			</Switch>
 			<FooterNav/>
 		</React.Fragment>
@@ -52,6 +53,6 @@ export function render() {
 				</HashRouter>
 			</RecoilRoot>
 		</ThemeProvider>
-		, document.body
+		, document.getElementById("root")
 	);
 }

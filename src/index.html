@@ -4,8 +4,38 @@
     <meta charset="UTF-8">
     <title>Money Tracker</title>
 
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+
+      ::-webkit-scrollbar {
+        display: none;
+      }
+
+      :not(input):not(textarea),
+      :not(input):not(textarea)::after,
+      :not(input):not(textarea)::before {
+          -webkit-user-select: none;
+          user-select: none;
+          cursor: default;
+      }
+      input, button, textarea, :focus {
+          outline: none;
+      }
+
+      #appbar {
+        -webkit-user-select: none;
+        -webkit-app-region: drag;
+      }
+      #appbarbutton {
+        -webkit-app-region: no-drag;
+      }
+    </style>
+
   </head>
   <body>
-    
+    <div id="root"></div>
   </body>
 </html>
