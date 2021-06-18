@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     flexDirection: "column"
   },
   fab: {
-    position: 'absolute',
+    position: 'fixed',
     bottom: 82,
     right: 30,
     background: '#33e89a',

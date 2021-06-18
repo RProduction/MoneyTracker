@@ -11,7 +11,7 @@ import { PageEnum, getPage, setPage } from "../states/WindowState";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
-    position: "absolute",
+    position: "fixed",
     bottom: 0,
     left: 0,
     right: 0,
