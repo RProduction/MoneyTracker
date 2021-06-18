@@ -18,7 +18,9 @@ const money = atom<Money[]>({
     {date: "20/08/2020", value: 5000, type: "decrease"},
     {date: "11/08/2020", value: 25000, type: "increase"},
     {date: "05/09/2020", value: 20000, type: "increase"},
-    {date: "15/10/2020", value: 7500, type: "decrease"}
+    {date: "23/09/2020", value: 5000, type: "decrease"},
+    {date: "20/08/2020", value: 5000, type: "decrease"},
+    {date: "17/08/2020", value: 7500, type: "decrease"}
   ]
 });
 
@@ -50,7 +52,11 @@ const moneyList = selector({
     rawVal.forEach((value, key) => {
       newVal.push({
         date: key,
-        value: value.sort((a, b) => b.date.localeCompare(a.date))
+        value: value.sort((a, b) => {
+          const rawA = parseInt(a.date.split("/")[0]);
+          const rawB = parseInt(b.date.split("/")[0]);
+          return rawB - rawA;
+        })
       });
     })
     newVal.sort((a, b) => {
@@ -90,9 +96,16 @@ const moneyOverall = selector({
         value: value
       });
     })
-    newVal.sort((a, b) => b.date.localeCompare(a.date));
-
-    let newValue: Money[] = newVal.map(value => {
+    newVal = newVal.sort((a, b) => {
+      const rawA = a.date.split("/");
+      const rawB = b.date.split("/");
+      const dateA = new Date(parseInt(rawA[2]), parseInt(rawA[1]), parseInt(rawA[0]));
+      const dateB = new Date(parseInt(rawB[2]), parseInt(rawB[1]), parseInt(rawB[0]));
+      return dateA.getTime() - dateB.getTime();
+    });
+    
+    // combine value in the same day
+    let rawValue: Money[] = newVal.map(value => {
       return value.value.reduce((prev, cur) => {
         const tempPrev = prev.type === 'increase' ? prev.value : -prev.value;
         const tempCur = cur.type === 'increase' ? cur.value : -cur.value;
@@ -104,7 +117,27 @@ const moneyOverall = selector({
           type: res >= 0 ? 'increase' : 'decrease'
         };
       });
-    })
+    });
+
+    // compute income for each data inserted in each day
+    let newValue: Money[] = [];
+    for(let i=0; i < rawValue.length; i++) {
+      let tempMoney: Money = {
+        date: rawValue[i].date,
+        value: 0,
+        type: "increase"
+      };
+      for(let j=0; j <= i; j++) {
+        const tempPrev = tempMoney.type === 'increase' ? tempMoney.value : -tempMoney.value;
+        const tempCur = rawValue[j].type === 'increase' ? rawValue[j].value : -rawValue[j].value;
+        const res = tempPrev + tempCur;
+
+        tempMoney.value = res;
+        tempMoney.type = res >= 0 ? 'increase' : 'decrease';
+      }
+      newValue.push(tempMoney);
+    }
+    console.log(newValue);
 
     return newValue;
   }
@@ -114,19 +147,7 @@ const income = selector({
   key: 'incomeSelector',
   get: ({get}) => {
     const value = get(moneyOverall);
-    const reduced = value.reduce((prev, cur) => {
-      const tempPrev = prev.type === 'increase' ? prev.value : -prev.value;
-      const tempCur = cur.type === 'increase' ? cur.value : -cur.value;
-      const res = tempPrev + tempCur;
-
-      return {
-        date: prev.date,
-        value: Math.abs(res),
-        type: res >= 0 ? 'increase' : 'decrease'
-      };
-    });
-
-    return reduced.type === "increase" ? reduced.value : 0 ;
+    return value[value.length-1].type === "increase" ? value[value.length-1].value : 0 ;
   }
 })
 
