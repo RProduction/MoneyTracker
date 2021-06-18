@@ -32,7 +32,7 @@ function FooterNav() {
         value={page}
         onChange={
           (ev, value) => set(
-            () => value === 0 ? PageEnum.Income : PageEnum.Overall
+            value === 0 ? PageEnum.Income : PageEnum.Overall
           )
         }
       >

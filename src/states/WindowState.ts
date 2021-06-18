@@ -21,5 +21,8 @@ export const getPage = () => {
 }
 
 export const setPage = () => {
-  return useSetRecoilState<PageEnum>(page);
+  const set = useSetRecoilState<PageEnum>(page);
+  return (value: PageEnum) => {
+    set(() => value);
+  }
 }
