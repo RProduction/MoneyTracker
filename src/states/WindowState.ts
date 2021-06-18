@@ -3,6 +3,7 @@ import {
   useRecoilValue,
   useSetRecoilState
 } from 'recoil';
+import {useHistory} from 'react-router-dom';
 
 // page state
 export enum PageEnum {
@@ -22,7 +23,9 @@ export const getPage = () => {
 
 export const setPage = () => {
   const set = useSetRecoilState<PageEnum>(page);
+  const history = useHistory();
   return (value: PageEnum) => {
     set(() => value);
+    history.push(value === PageEnum.Income ? "/" : "overall");
   }
 }

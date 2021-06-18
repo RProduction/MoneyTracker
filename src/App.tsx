@@ -13,6 +13,7 @@ import { RecoilRoot } from 'recoil';
 import AppBar from './components/AppBar';
 import FooterNav from './components/FooterNav';
 import List from './pages/List';
+import Overall from './pages/Overall';
 
 const theme = createMuiTheme({
     palette: {
@@ -37,7 +38,8 @@ function App() {
 			
 			<AppBar/>
 			<Switch>
-				<Route component={List}/>
+				<Route path="/overall" component={Overall}/>
+				<Route path="/" component={List}/>
 			</Switch>
 			<FooterNav/>
 		</React.Fragment>
