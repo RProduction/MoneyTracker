@@ -6,6 +6,8 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import {
   VictoryChart,
   VictoryLine,
+  VictoryArea,
+  VictoryGroup,
   VictoryZoomContainer,
   VictoryBrushContainer,
   VictoryAxis
@@ -15,7 +17,7 @@ import { Money } from '../models/Money';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
-
+    padding: theme.spacing(2)
   }
 }));
 
@@ -55,16 +57,16 @@ function OverallChart({ value }: OverallChartProps) {
   let tick: Date[] = [];
   let minYear = data[0].x.getFullYear();
   const maxYear = data[data.length-1].x.getFullYear();
-  while(minYear < maxYear) {
+  while(minYear <= maxYear) {
     tick.push(new Date(minYear, 1, 1));
-    minYear += 2;
+    minYear += 1;
   }
 
   return (
-    <Grid item>
+    <Grid item className={styles.root}>
       <VictoryChart
-        width={550}
-        height={300}
+        width={window.innerWidth}
+        height={window.innerHeight - 420}
         scale={{ x: "time" }}
         containerComponent={
           <VictoryZoomContainer responsive={true}
@@ -74,20 +76,31 @@ function OverallChart({ value }: OverallChartProps) {
           />
         }
       >
-        <VictoryLine
+        <VictoryGroup
           style={{
-            data: { stroke: "tomato" }
+            data: { strokeWidth: 5, fillOpacity: 0.2 }
           }}
-          data={data}
-        />
+        >
+          <VictoryArea
+            style={{
+              data: { fill: 'cyan', stroke: "cyan" }
+            }}
+            data={data}
+          />
+        </VictoryGroup>
 
       </VictoryChart>
       
       <VictoryChart
-        width={550}
-        height={90}
+        style={{
+          parent: {
+            height: "auto"
+          }
+        }}
+        width={window.innerWidth}
+        height={75}
         scale={{ x: "time" }}
-        padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+        padding={{ top: 0, left: 100, right: 100, bottom: 30 }}
         containerComponent={
           <VictoryBrushContainer responsive={true}
             brushDimension="x"
@@ -102,7 +115,7 @@ function OverallChart({ value }: OverallChartProps) {
         />
         <VictoryLine
           style={{
-            data: { stroke: "tomato" }
+            data: { stroke: "cyan" }
           }}
           data={data}
         />

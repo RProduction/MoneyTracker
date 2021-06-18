@@ -35,8 +35,8 @@ function AppBar() {
 		window.api.minimize();
 	};
 	const resize = () => {
-		setFullscreen(!fullscreen);
 		window.api.maximize();
+		setFullscreen(!fullscreen);
 	};
 	const close = () => {
 		window.api.close();
