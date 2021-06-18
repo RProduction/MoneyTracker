@@ -12,9 +12,11 @@ import { Money } from "../models/Money";
 const money = atom<Money[]>({
   key: 'moneyAtom',
   default: [
+    {date: "11/02/2019", value: 50000, type: "increase"},
+    {date: "21/04/2021", value: 45000, type: "decrease"},
     {date: "01/08/2020", value: 10000, type: "increase"},
-    {date: "11/08/2020", value: 25000, type: "increase"},
     {date: "20/08/2020", value: 5000, type: "decrease"},
+    {date: "11/08/2020", value: 25000, type: "increase"},
     {date: "05/09/2020", value: 20000, type: "increase"},
     {date: "15/10/2020", value: 7500, type: "decrease"}
   ]
@@ -51,7 +53,15 @@ const moneyList = selector({
         value: value.sort((a, b) => b.date.localeCompare(a.date))
       });
     })
-    newVal.sort((a, b) => b.date.localeCompare(a.date));
+    newVal.sort((a, b) => {
+      const rawA = a.date.split("/");
+      const rawB = b.date.split("/");
+      if(rawA[1] !== rawB[1]){
+        return parseInt(rawB[1]) - parseInt(rawA[1]);
+      }else{
+        return parseInt(rawB[0]) - parseInt(rawA[0]);
+      };
+    });
 
     return newVal;
   }
@@ -100,6 +110,26 @@ const moneyOverall = selector({
   }
 })
 
+const income = selector({
+  key: 'incomeSelector',
+  get: ({get}) => {
+    const value = get(moneyOverall);
+    const reduced = value.reduce((prev, cur) => {
+      const tempPrev = prev.type === 'increase' ? prev.value : -prev.value;
+      const tempCur = cur.type === 'increase' ? cur.value : -cur.value;
+      const res = tempPrev + tempCur;
+
+      return {
+        date: prev.date,
+        value: Math.abs(res),
+        type: res >= 0 ? 'increase' : 'decrease'
+      };
+    });
+
+    return reduced.type === "increase" ? reduced.value : 0 ;
+  }
+})
+
 // getter and setter
 export const getMoneyList = () => {
   return useRecoilValue(moneyList);
@@ -114,4 +144,8 @@ export const setMoneyList = () => {
 
 export const getMoneyOverall = () => {
   return useRecoilValue(moneyOverall);
+}
+
+export const getIncome = () => {
+  return useRecoilValue(income);
 }
