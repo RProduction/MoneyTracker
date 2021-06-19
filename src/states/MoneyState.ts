@@ -4,6 +4,8 @@ import {
   useRecoilValue,
   useSetRecoilState
 } from 'recoil';
+import {generate} from 'shortid';
+import PouchDB from 'pouchdb';
 
 import { Money } from "../models/Money";
 
@@ -12,15 +14,15 @@ import { Money } from "../models/Money";
 const money = atom<Money[]>({
   key: 'moneyAtom',
   default: [
-    {date: "11/02/2019", value: 50000, type: "increase"},
-    {date: "21/04/2021", value: 45000, type: "decrease"},
-    {date: "01/08/2020", value: 10000, type: "increase"},
-    {date: "20/08/2020", value: 5000, type: "decrease"},
-    {date: "11/08/2020", value: 25000, type: "increase"},
-    {date: "05/09/2020", value: 20000, type: "increase"},
-    {date: "23/09/2020", value: 5000, type: "decrease"},
-    {date: "20/08/2020", value: 5000, type: "decrease"},
-    {date: "17/08/2020", value: 7500, type: "decrease"}
+    {_id: generate(),date: "11/02/2019", value: 50000, type: "increase"},
+    {_id: generate(),date: "21/04/2021", value: 45000, type: "decrease"},
+    {_id: generate(),date: "01/08/2020", value: 10000, type: "increase"},
+    {_id: generate(),date: "20/08/2020", value: 5000, type: "decrease"},
+    {_id: generate(),date: "11/08/2020", value: 25000, type: "increase"},
+    {_id: generate(),date: "05/09/2020", value: 20000, type: "increase"},
+    {_id: generate(),date: "23/09/2020", value: 5000, type: "decrease"},
+    {_id: generate(),date: "20/08/2020", value: 5000, type: "decrease"},
+    {_id: generate(),date: "17/08/2020", value: 7500, type: "decrease"}
   ]
 });
 
@@ -112,6 +114,7 @@ const moneyOverall = selector({
         const res = tempPrev + tempCur;
 
         return {
+          _id: "",
           date: prev.date,
           value: Math.abs(res),
           type: res >= 0 ? 'increase' : 'decrease'
@@ -123,6 +126,7 @@ const moneyOverall = selector({
     let newValue: Money[] = [];
     for(let i=0; i < rawValue.length; i++) {
       let tempMoney: Money = {
+        _id: "",
         date: rawValue[i].date,
         value: 0,
         type: "increase"
@@ -152,6 +156,22 @@ const income = selector({
 })
 
 // getter and setter
+export const initMoney = () => {
+  const setMoney = useSetRecoilState(money);
+  return async() => {
+    const db = new PouchDB("db");
+    const res = await db.allDocs<Money>({include_docs: true});
+    db.close();
+
+    setMoney((val) => res.rows.map(value => ({
+      _id: value.doc ? value.doc._id : "",
+      date: value.doc ? value.doc.date : "",
+      type: value.doc ? value.doc.type : "increase",
+      value: value.doc ? value.doc.value : 0,
+    })));
+  }
+}
+
 export const getMoneyList = () => {
   return useRecoilValue(moneyList);
 }
@@ -159,7 +179,23 @@ export const getMoneyList = () => {
 export const setMoneyList = () => {
   const setMoney = useSetRecoilState(money);
   return (value: Money) => {
+    value._id = generate();
+    const db = new PouchDB("db");
+    db.put(value);
+    db.close();
     setMoney((val) => [...val, value]);
+  }
+}
+
+export const deleteMoneyList = () => {
+  const setMoney = useSetRecoilState(money);
+  return async (id: string) => {
+    const db = new PouchDB("db");
+    const money = await db.get<Money>(id);
+    db.remove(money);
+    db.close();
+
+    setMoney((val) => val.filter((value) => value._id !== id));
   }
 }
 
