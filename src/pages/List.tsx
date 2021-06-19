@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import ListRoot from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
@@ -10,6 +10,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { getMoneyList } from '../states/MoneyState';
 
 import ListItem from '../components/ListItem';
+import AddWindow from '../components/AddWindow';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
 	root: {
@@ -49,6 +50,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 function List() {
   const list = getMoneyList();
   const styles = useStyles();
+  const [addWindow, setAddWindow] = useState<boolean>(false);
+  const onClose = () => setAddWindow(false);
 
   return(
     <React.Fragment>
@@ -71,9 +74,14 @@ function List() {
             </Typography>
           </div>
       }
-      <Fab className={styles.fab} size="medium">
+      <Fab 
+        className={styles.fab} 
+        size="medium"
+        onClick={() => setAddWindow(true)}
+      >
         <AddIcon/>
       </Fab>
+      <AddWindow activate={addWindow} onClose={onClose}/>
     </React.Fragment>
   )
 }
