@@ -13,17 +13,7 @@ import { Money } from "../models/Money";
 
 const money = atom<Money[]>({
   key: 'moneyAtom',
-  default: [
-    {_id: generate(),date: "11/02/2019", value: 50000, type: "increase"},
-    {_id: generate(),date: "21/04/2021", value: 45000, type: "decrease"},
-    {_id: generate(),date: "01/08/2020", value: 10000, type: "increase"},
-    {_id: generate(),date: "20/08/2020", value: 5000, type: "decrease"},
-    {_id: generate(),date: "11/08/2020", value: 25000, type: "increase"},
-    {_id: generate(),date: "05/09/2020", value: 20000, type: "increase"},
-    {_id: generate(),date: "23/09/2020", value: 5000, type: "decrease"},
-    {_id: generate(),date: "20/08/2020", value: 5000, type: "decrease"},
-    {_id: generate(),date: "17/08/2020", value: 7500, type: "decrease"}
-  ]
+  default: []
 });
 
 // money list selector
