@@ -141,7 +141,11 @@ const income = selector({
   key: 'incomeSelector',
   get: ({get}) => {
     const value = get(moneyOverall);
-    return value[value.length-1].type === "increase" ? value[value.length-1].value : 0 ;
+
+    if(value.length > 0)
+      return value[value.length-1].type === "increase" ? value[value.length-1].value : 0 ;
+    else
+      return 0;
   }
 })
 

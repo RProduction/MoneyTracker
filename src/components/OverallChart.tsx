@@ -10,7 +10,7 @@ import {
   VictoryGroup,
   VictoryZoomContainer,
   VictoryBrushContainer,
-  VictoryAxis
+  VictoryAxis,
 } from 'victory';
 
 import { Money } from '../models/Money';
@@ -25,14 +25,10 @@ type OverallChartProps = {
   value: Money[]
 }
 
-interface Domain {
-  
-}
-
 function OverallChart({ value }: OverallChartProps) {
   const styles = useStyles();
-  const [selectedDomain, setSelectedDomain] = useState<any>([]);
-  const [zoomDomain, setZoomDomain] = useState<any>([]);
+  const [selectedDomain, setSelectedDomain] = useState<any>();
+  const [zoomDomain, setZoomDomain] = useState<any>();
   
   const handleZoom = (domain: any) => {
     setSelectedDomain(domain);
@@ -55,8 +51,8 @@ function OverallChart({ value }: OverallChartProps) {
   });
 
   let tick: Date[] = [];
-  let minYear = data[0].x.getFullYear();
-  const maxYear = data[data.length-1].x.getFullYear();
+  let minYear = data.length > 0 ? data[0].x.getFullYear() : 0;
+  const maxYear = data.length > 0 ? data[data.length-1].x.getFullYear() : 0;
   while(minYear <= maxYear) {
     tick.push(new Date(minYear, 1, 1));
     minYear += 1;
